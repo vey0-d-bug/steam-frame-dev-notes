@@ -1,0 +1,11 @@
+// Lets the steamos user power the headset off without an interactive
+// password prompt, so `systemctl poweroff` works over ssh.
+// Install:
+//   sudo install -m 644 50-steamos-poweroff.rules /etc/polkit-1/rules.d/
+polkit.addRule(function (action, subject) {
+    if ((action.id == "org.freedesktop.login1.power-off" ||
+         action.id == "org.freedesktop.login1.power-off-multiple-sessions") &&
+        subject.user == "steamos") {
+        return polkit.Result.YES;
+    }
+});
